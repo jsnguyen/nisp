@@ -8,7 +8,7 @@ include("stl.jl")
 function main()
 
     sphere_radius = 1.0
-    n_points = 10
+    n_points = 3
     side_length = sphere_radius/10
     earth_axial_tilt = deg2rad(23.43652)
     lat = deg2rad(30)
@@ -44,13 +44,11 @@ function main()
     @printf("Minimum Area  : %.6f %8.3f%%\n", min_area,abs(min_area-mid_area)/mid_area * 100)
     @printf("Maximum Area  : %.6f %8.3f%%\n", max_area,abs(max_area-mid_area)/mid_area * 100)
 
-    # linear interpolation between max to min, probably not actually linear...
-    # change this to sinusoidal eventually
-
     plot()
-
+    lat_range = deg2rad(20):0.01:deg2rad(45)
     range = 0:0.01:2*pi
-    for lat in deg2rad(20):0.01:deg2rad(45)
+    lat_areas = Vector{Vector{Float64}}()
+    for lat in lat_range
         println(lat)
         mod_area = Vector{Float64}()
         for ang in range
@@ -61,6 +59,7 @@ function main()
             area = area_of_triangle_mesh(tris)
             append!(mod_area,area)
         end
+        push!(lat_areas,mod_area)
         plot!(range, mod_area)
     end
 
