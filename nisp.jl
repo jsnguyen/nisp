@@ -1,5 +1,4 @@
 using Printf
-using Plots
 
 include("triangles.jl")
 include("sphere.jl")
@@ -43,27 +42,6 @@ function main()
     @printf("Face-On Area  : %.6f\n", mid_area)
     @printf("Minimum Area  : %.6f %8.3f%%\n", min_area,abs(min_area-mid_area)/mid_area * 100)
     @printf("Maximum Area  : %.6f %8.3f%%\n", max_area,abs(max_area-mid_area)/mid_area * 100)
-
-    plot()
-    lat_range = deg2rad(20):0.01:deg2rad(45)
-    range = 0:0.01:2*pi
-    lat_areas = Vector{Vector{Float64}}()
-    for lat in lat_range
-        println(lat)
-        mod_area = Vector{Float64}()
-        for ang in range
-            off_axis_angle = pi/2 - (earth_axial_tilt*cos(ang) + (pi/2-lat))
-            offset = sphere_radius*sin(off_axis_angle)
-            tris = get_plane_triangle_mesh(side_length, side_length, n_points, n_points, offset, 0.0, 0.0)
-            tris = map_tris_to_sphere_surface(tris, sphere_radius)
-            area = area_of_triangle_mesh(tris)
-            append!(mod_area,area)
-        end
-        push!(lat_areas,mod_area)
-        plot!(range, mod_area)
-    end
-
-    plot!()
 
 end
 
